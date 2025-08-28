@@ -1,0 +1,137 @@
+HTML (todo.html)
+
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App</title>
+    <link rel="stylesheet" href="todo.css">
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <form id="todo-form">
+            <input type="text" id="todo-input" placeholder="Add a new task..." required>
+            <button type="submit">Add Task</button>
+        </form>
+        <ul id="todo-list"></ul>
+    </div>
+    
+    <script src="todo.js"></script>
+</body>
+</html>
+CSS (todo.css)
+
+CSS
+
+body {
+    font-family: sans-serif;
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    color: #343a40;
+}
+
+#todo-form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#todo-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+#todo-list {
+    list-style: none;
+    padding: 0;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+.todo-item.completed span {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+JavaScript (todo.js)
+
+JavaScript
+
+const form = document.getElementById('todo-form');
+const input = document.getElementById('todo-input');
+const list = document.getElementById('todo-list');
+
+// Load tasks from local storage on page load
+document.addEventListener('DOMContentLoaded', loadTasks);
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    addTask(input.value);
+    input.value = '';
+});
+
+// Function to add a new task
+function addTask(taskText) {
+    if (taskText === '') return;
+
+    const todo = {
+        id: Date.now(),
+        text: taskText,
+        completed: false
+    };
+
+    saveTask(todo);
+    renderTask(todo);
+}
+
+// Function to save a task to local storage
+function saveTask(todo) {
+    const todos = getTasks();
+    todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// Function to retrieve tasks from local storage
+function getTasks() {
+    const todos = localStorage.getItem('todos');
+    return todos ? JSON.parse(todos) : [];
+}
+
+// Function to render a task to the DOM
+function renderTask(todo) {
+    const li = document.createElement('li');
+    li.className = 'todo-item';
+    if (todo.completed) {
+        li.classList.add('completed');
+    }
